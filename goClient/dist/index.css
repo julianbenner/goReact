@@ -16,6 +16,11 @@
     background-size: 100% auto;
 }
 
+.field-lastmove {
+    border: 2px red solid;
+    box-sizing: border-box;
+}
+
 .row {
     margin: 0;
     padding: 0;

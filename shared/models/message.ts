@@ -1,4 +1,4 @@
-import {PiecePosition} from "./move";
+import {PiecePosition} from "./piecePosition";
 export enum MessageType {
     NewGame = 1,
     Move = 2,

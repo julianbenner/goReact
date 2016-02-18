@@ -45,6 +45,15 @@ class MainSection extends React.Component<MainSectionProps, any> {
             alert("Invalid size");
         }
     }
+    
+    isLastMove(x, y) {
+        const lastMove = this.props.game.game.lastMove;
+        if (lastMove === null) {
+            return false
+        } else {
+            return lastMove.x === x && lastMove.y;
+        }
+    }
 
     renderBoard(board: Board) {
         return board.squares.map((row: Piece[], y: number) => {
@@ -52,7 +61,8 @@ class MainSection extends React.Component<MainSectionProps, any> {
                 const cn = classnames({
                     'field': true,
                     'field-black': piece === Piece.Black,
-                    'field-white': piece === Piece.White
+                    'field-white': piece === Piece.White,
+                    'field-lastmove': this.isLastMove(x, y)
                 });
                 return <a className={cn} onClick={this.handleMove.bind(this, x, y)} />
             });

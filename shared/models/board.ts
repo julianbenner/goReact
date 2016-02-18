@@ -1,5 +1,5 @@
 import {Piece} from "./piece";
-import {PiecePosition} from "./move";
+import {PiecePosition} from "./piecePosition";
 import {Stats} from "./stats";
 
 export class Board {
@@ -56,13 +56,18 @@ export class Board {
         return neighborsCaptured.filter(neighbor => neighbor === true).length === 4;
     }
 
-    takeCapturedStones(): Stats {
+    /**
+     * Removes the stones that are captured
+     * @param color Remove only stones of this color
+     * @returns {Stats} How many stones were captured
+     */
+    takeCapturedStones(color: Piece): Stats {
         const capturedStones = [];
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
                 const position = {x: i, y: j};
                 const content = this.getContent(position);
-                if (content === Piece.Black || content === Piece.White) {
+                if (content === color) {
                     if (this.isCaptured(position, [], content)) {
                         capturedStones.push(position);
                     }
