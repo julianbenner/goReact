@@ -49,9 +49,9 @@ class MainSection extends React.Component<MainSectionProps, any> {
     isLastMove(x, y) {
         const lastMove = this.props.game.game.lastMove;
         if (lastMove === null) {
-            return false
+            return false;
         } else {
-            return lastMove.x === x && lastMove.y;
+            return lastMove.x === x && lastMove.y === y;
         }
     }
 
