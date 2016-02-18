@@ -18,6 +18,12 @@ export default handleActions<GameState>({
         return state;
     },
     [MOVE]: (state: GameState, action: Action): GameState => {
+        if('Notification' in window){
+            let _Notification = window['Notification'];
+            if (_Notification.permission === 'granted') {
+                new _Notification('A move has been made!');
+            }
+        }
         return state;
     },
     [RECEIVE_GAME]: (state: GameState, action: Action): GameState => {

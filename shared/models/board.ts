@@ -1,5 +1,6 @@
 import {Piece} from "./piece";
 import {PiecePosition} from "./move";
+import {Stats} from "./stats";
 
 export class Board {
     squares: Piece[][];
@@ -55,7 +56,7 @@ export class Board {
         return neighborsCaptured.filter(neighbor => neighbor === true).length === 4;
     }
 
-    takeCapturedStones(): number {
+    takeCapturedStones(): Stats {
         const capturedStones = [];
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
@@ -68,10 +69,16 @@ export class Board {
                 }
             }
         }
+        const captured = new Stats();
         capturedStones.forEach(stone => {
+            if (this.squares[stone.x][stone.y] === Piece.White) {
+                captured.black++;
+            } else if (this.squares[stone.x][stone.y] === Piece.Black) {
+                captured.white++;
+            }
             this.squares[stone.x][stone.y] = Piece.Empty;
         });
-        return capturedStones.length;
+        return captured;
     }
 
     move(move: PiecePosition, color: boolean): boolean {

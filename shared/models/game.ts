@@ -22,7 +22,8 @@ class Game {
     move(move: {x:number,y:number}): boolean {
         if (this.board.move(move, this.turn)) {
             const captured = this.board.takeCapturedStones();
-            if (this.turn) this.stats.white += captured; else this.stats.black += captured;
+            this.stats.white += captured.white;
+            this.stats.black += captured.black;
             this.turn = !this.turn;
             return true;
         }

@@ -40,6 +40,11 @@ ReactDOM.render(
     document.getElementById('app')
 );
 
+if ('Notification' in window) {
+    let _Notification = window['Notification'];
+    _Notification.requestPermission();
+}
+
 const sock = {
     ws: null,
     URL: 'jbenner.de:3000',
