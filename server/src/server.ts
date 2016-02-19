@@ -2,7 +2,10 @@
 
 import WebSocket = require('ws');
 import {ServerGame} from "../../models/game";
-import {Message, MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from "../../models/message";
+import {
+    Message, MessageType, MoveMessage, NewGameMessage, JoinGameMessage, PassMessage,
+    GameMessageInterface
+} from "../../models/message";
 
 const port: number = process.env.PORT || 3000;
 const WebSocketServer = WebSocket.Server;
@@ -30,6 +33,15 @@ function removeSocketFromGames(ws: WebSocket) {
     })
 }
 
+function getGameOfMessage(message: GameMessageInterface): ServerGame {
+    const games = state.filter(game => game.id === message.gameId);
+    if (games.length === 1) {
+        return games[0];
+    } else {
+        throw "No game found!";
+    }
+}
+
 function handleMessage(messageString: string, ws: WebSocket) {
     try {
         const message:Message = JSON.parse(messageString);
@@ -44,23 +56,23 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 break;
             case MessageType.Join:
                 const joinGameMessage = <JoinGameMessage>message;
-                const joinGames = state.filter(game => game.id == joinGameMessage.gameId);
-                if (joinGames.length === 1) {
-                    const game = joinGames[0];
-                    if (game.clients.indexOf(ws) === -1) {
-                        game.clients.push(ws);
-                    }
-                    broadcast(game, ws);
+                const joinGame = getGameOfMessage(joinGameMessage);
+                if (joinGame.clients.indexOf(ws) === -1) {
+                    joinGame.clients.push(ws);
                 }
+                broadcast(joinGame, ws);
                 break;
             case MessageType.Move:
                 const moveMessage = <MoveMessage>message;
-                const games = state.filter(game => game.id === moveMessage.gameId);
-                if (games.length === 1) {
-                    const game = games[0];
-                    game.move(moveMessage.move);
-                    broadcast(game, ws);
-                }
+                const moveGame = getGameOfMessage(moveMessage);
+                moveGame.move(moveMessage.move);
+                broadcast(moveGame, ws);
+                break;
+            case MessageType.Pass:
+                const passMessage = <PassMessage>message;
+                const passGame = getGameOfMessage(passMessage);
+                passGame.pass();
+                broadcast(passGame, ws);
                 break;
         }
     } catch (e) {

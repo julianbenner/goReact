@@ -18,9 +18,9 @@ import {
 
 import App from './containers/App';
 import { rootReducer } from './reducers/rootReducer';
-import {NEW_GAME, MOVE, JOIN_GAME} from "./constants/ActionTypes";
+import {NEW_GAME, MOVE, JOIN_GAME, PASS} from "./constants/ActionTypes";
 import WSInstance from './util/WSInstance';
-import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from '../../models/message';
+import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage, PassMessage} from '../../models/message';
 import {receiveGame} from './actions/game';
 
 const initialState = {};
@@ -45,7 +45,7 @@ if ('Notification' in window) {
 
 const sock = {
     ws: null,
-    URL: 'jbenner.de:3000',
+    URL: '127.0.0.1:3000',
     wsDispatcher: (msg) => {
         const { game } = store.getState();
         return store.dispatch(receiveGame(msg));
@@ -71,7 +71,11 @@ const sock = {
                     color: game.game.color,
                     move: lastAction.payload.move
                 } as MoveMessage);
-
+            case PASS:
+                return sock.ws.postMessage({
+                    type: MessageType.Pass,
+                    gameId: game.game.id
+                } as PassMessage);
             default:
                 return;
         }

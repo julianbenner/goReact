@@ -18,7 +18,7 @@
     "../models/stats.ts",
     "./src/main.tsx",
     "./src/actions/game.ts",
-    "./src/components/Board.tsx",
+    "./src/components/BoardElement.tsx",
     "./src/components/MainSection.tsx",
     "./src/constants/ActionTypes.ts",
     "./src/containers/App.tsx",

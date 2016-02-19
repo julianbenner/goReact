@@ -23,9 +23,15 @@ const move = createAction<GameState>(
     (move) => ({ move })
 );
 
+const passMove = createAction<GameState>(
+    types.PASS,
+    () => ({ })
+);
+
 export {
     newGame,
     joinGame,
     receiveGame,
-    move
+    move,
+    passMove
 }

@@ -37,6 +37,10 @@ class Game {
         }
         return false;
     }
+
+    pass() {
+        this.turn = !this.turn;
+    }
 }
 
 export class ClientGame extends Game {

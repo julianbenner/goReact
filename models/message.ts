@@ -2,18 +2,23 @@ import {PiecePosition} from "./piecePosition";
 export enum MessageType {
     NewGame = 1,
     Move = 2,
-    Join = 3
+    Join = 3,
+    Pass = 4
 }
 
 interface MessageInterface {
     type: MessageType;
 }
 
+export interface GameMessageInterface {
+    gameId: number;
+}
+
 export class Message implements MessageInterface {
     type: MessageType;
 }
 
-export class JoinGameMessage extends Message {
+export class JoinGameMessage extends Message implements GameMessageInterface {
     gameId: number;
 }
 
@@ -21,9 +26,13 @@ export class NewGameMessage extends Message {
     size: number;
 }
 
-export class PlayerMessage extends Message {
+export class PlayerMessage extends Message implements GameMessageInterface {
     gameId: number;
     color: boolean;
+}
+
+export class PassMessage extends PlayerMessage {
+
 }
 
 export class MoveMessage extends PlayerMessage {
