@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 
-import {GameState} from "../../../shared/models/game";
-import {Board} from "../../../shared/models/board";
-import {Piece} from "../../../shared/models/piece";
+import {GameState} from "../../../models/game";
+import {Board} from "../../../models/board";
+import {Piece} from "../../../models/piece";
 
 interface MainSectionProps {
     game: GameState;
@@ -45,7 +45,7 @@ class MainSection extends React.Component<MainSectionProps, any> {
             alert("Invalid size");
         }
     }
-    
+
     isLastMove(x, y) {
         const lastMove = this.props.game.game.lastMove;
         if (lastMove === null) {
@@ -96,7 +96,7 @@ class MainSection extends React.Component<MainSectionProps, any> {
                 {this.renderGame()}
                 {this.renderStats()}
             </section>
-    );
+        );
     }
 }
 

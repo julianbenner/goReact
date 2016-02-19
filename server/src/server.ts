@@ -1,8 +1,8 @@
-/// <reference path='../../shared/typings/main.d.ts' />
+/// <reference path='../../typings/main.d.ts' />
 
 import WebSocket = require('ws');
-import {ServerGame} from "../../shared/models/game";
-import {Message, MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from "../../shared/models/message";
+import {ServerGame} from "../../models/game";
+import {Message, MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from "../../models/message";
 
 const port: number = process.env.PORT || 3000;
 const WebSocketServer = WebSocket.Server;

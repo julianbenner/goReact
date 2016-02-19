@@ -1,7 +1,6 @@
-import { createAction, Action } from 'redux-actions';
-import { assign } from 'lodash';
+import { createAction } from 'redux-actions';
 
-import {ClientGame, GameState} from '../../../shared/models/game';
+import {GameState} from '../../../models/game';
 import * as types from '../constants/ActionTypes';
 
 const receiveGame = createAction<GameState>(

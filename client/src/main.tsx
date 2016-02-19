@@ -1,4 +1,6 @@
-/// <reference path='../../shared/typings/main.d.ts'/>
+/// <reference path='../../typings/browser.d.ts'/>
+
+//require('../css/index.css');
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -8,22 +10,18 @@ import {
     Store,
     compose,
     createStore,
-    bindActionCreators,
-    combineReducers,
     applyMiddleware
 } from 'redux';
 import {
-    connect,
     Provider
 } from 'react-redux';
-import { Action } from 'redux-actions';
 
 import App from './containers/App';
 import { rootReducer } from './reducers/rootReducer';
 import {NEW_GAME, MOVE, JOIN_GAME} from "./constants/ActionTypes";
-import WSInstance from "./util/WSInstance";
-import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from "../../shared/models/message";
-import {receiveGame} from "./actions/game";
+import WSInstance from './util/WSInstance';
+import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage} from '../../models/message';
+import {receiveGame} from './actions/game';
 
 const initialState = {};
 

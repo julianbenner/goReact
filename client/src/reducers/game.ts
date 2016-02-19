@@ -1,7 +1,6 @@
-import { assign } from 'lodash';
 import { handleActions, Action } from 'redux-actions';
 
-import {ClientGame, GameState} from '../../../shared/models/game';
+import {ClientGame, GameState} from '../../../models/game';
 import {
     NEW_GAME, RECEIVE_GAME, MOVE, JOIN_GAME
 } from '../constants/ActionTypes';

@@ -6,28 +6,29 @@ module.exports = {
         loaders: [
             {
                 loaders: ['ts-loader'],
-
-                // Only run `.js` and `.jsx` files through Babel
                 test: /\.tsx?$/
             }, {
                 test: /\.css?$/,
-                loaders: ['style', 'raw'],
+                loaders: ['style'],
                 include: __dirname
             }
         ]
+    },
+    ts: {
+        configFileName: './client/tsconfig.json'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
     entry: [
-        './src/main.tsx'
+        './client/src/main'
     ],
     output: {
         filename: 'build.js',
-        path: './dist'
+        path: './build/client'
     },
     resolve: {
         extensions: ["", ".webpack.js", ".web.js", ".js", ".json", ".ts", ".tsx"]
     },
     devtool: 'source-map'
-}
+};

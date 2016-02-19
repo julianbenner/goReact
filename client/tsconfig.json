@@ -1,0 +1,30 @@
+{
+  "version": "1.8.0",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "outDir": "build"
+  },
+  "files": [
+    "../models/board.ts",
+    "../models/game.ts",
+    "../models/message.ts",
+    "../models/piece.ts",
+    "../models/piecePosition.ts",
+    "../models/stats.ts",
+    "./src/main.tsx",
+    "./src/actions/game.ts",
+    "./src/components/Board.tsx",
+    "./src/components/MainSection.tsx",
+    "./src/constants/ActionTypes.ts",
+    "./src/containers/App.tsx",
+    "./src/reducers/game.ts",
+    "./src/reducers/rootReducer.ts",
+    "./src/util/WSInstance.ts",
+    "../typings/browser.d.ts"
+  ]
+}

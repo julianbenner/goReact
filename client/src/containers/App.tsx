@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import MainSection from '../components/MainSection';
 import * as GameActions from '../actions/game';
-import {GameState} from "../../../shared/models/game";
+import {GameState} from "../../../models/game";
 
 interface AppProps {
     game: GameState;
