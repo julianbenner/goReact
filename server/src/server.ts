@@ -90,7 +90,7 @@ function handleMessage(messageString: string, ws: WebSocket) {
     } catch (e) {
         console.error(e.message);
     }
-}   
+}
 
 function broadcast(game: ServerGame, ws: WebSocket): void {
     game.clients.forEach(client => {
