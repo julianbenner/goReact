@@ -24,7 +24,9 @@ class Information extends React.Component<InformationProps, any> {
     renderInformation() {
         if (this.props.game === null) return <div>No game loaded</div>;
         return (<div>
-            This is game {this.props.game.id} and it is {this.props.game.turn ? 'white' : 'black'}'s move.<br />
+            This is game {this.props.game.id}.<br/>
+            You are {this.props.game.color === Piece.White ? 'White' : this.props.game.color === Piece.Black ? 'Black' : 'a spectator'}<br />
+            {this.props.game.turn ? '○ White' : '● Black'}'s move.<br />
             <button onClick={this.passMove}>Pass</button><br /><br />
             <span id="stats-title">Stats</span><br/>
             <span>Black: {this.props.game.stats.black}</span><br/>

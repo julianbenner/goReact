@@ -30,6 +30,8 @@ function removeSocketFromGames(ws: WebSocket) {
         if (index > -1) {
             game.clients.splice(index, 1);
         }
+        if (game.clientBlack === ws) game.clientBlack = null;
+        if (game.clientWhite === ws) game.clientWhite = null;
     })
 }
 
@@ -52,6 +54,7 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 const newGame = new ServerGame(gameId++, newGameMessage.size);
                 state.push(newGame);
                 newGame.clients.push(ws);
+                newGame.clientWhite = ws;
                 broadcast(newGame, ws);
                 break;
             case MessageType.Join:
@@ -59,30 +62,39 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 const joinGame = getGameOfMessage(joinGameMessage);
                 if (joinGame.clients.indexOf(ws) === -1) {
                     joinGame.clients.push(ws);
+                    if (joinGame.clientWhite === null) {
+                        joinGame.clientWhite = ws;
+                    } else if (joinGame.clientBlack === null) {
+                        joinGame.clientBlack = ws;
+                    }
                 }
                 broadcast(joinGame, ws);
                 break;
             case MessageType.Move:
                 const moveMessage = <MoveMessage>message;
                 const moveGame = getGameOfMessage(moveMessage);
-                moveGame.move(moveMessage.move);
-                broadcast(moveGame, ws);
+                if (moveGame.isTheirMove(ws)) {
+                    moveGame.move(moveMessage.move);
+                    broadcast(moveGame, ws);
+                }
                 break;
             case MessageType.Pass:
                 const passMessage = <PassMessage>message;
                 const passGame = getGameOfMessage(passMessage);
-                passGame.pass();
-                broadcast(passGame, ws);
+                if (passGame.isTheirMove(ws)) {
+                    passGame.pass();
+                    broadcast(passGame, ws);
+                }
                 break;
         }
     } catch (e) {
         console.error(e.message);
     }
-}
+}   
 
 function broadcast(game: ServerGame, ws: WebSocket): void {
     game.clients.forEach(client => {
-        client.send(game.stringify());
+        client.send(game.stringify(client));
     })
 }
 

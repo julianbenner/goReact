@@ -44,24 +44,38 @@ class Game {
 }
 
 export class ClientGame extends Game {
-
+    color: Piece;
 }
 
 export class ServerGame extends Game {
     clients: WebSocket[];
+    clientWhite: WebSocket;
+    clientBlack: WebSocket;
 
     constructor(id: number, size: number) {
         super(id, size);
         this.clients = [];
+        this.clientWhite = null;
+        this.clientBlack = null;
     }
 
-    stringify(): string {
+    isTheirMove(ws: WebSocket): boolean {
+        if (this.turn && this.clientWhite === ws) {
+            return true;
+        } else if (!this.turn && this.clientBlack === ws) {
+            return true;
+        }
+        return false;
+    }
+
+    stringify(ws: WebSocket): string {
         return JSON.stringify({
             id: this.id,
             turn: this.turn,
             board: this.board,
             stats: this.stats,
-            lastMove: this.lastMove
+            lastMove: this.lastMove,
+            color: this.clientWhite === ws ? Piece.White : this.clientBlack === ws ? Piece.Black : Piece.Empty
         });
     }
 }
