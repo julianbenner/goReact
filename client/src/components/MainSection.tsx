@@ -45,11 +45,15 @@ class MainSection extends React.Component<MainSectionProps, any> {
     render() {
         return (
             <section className="main">
-                <input placeholder="Board size" ref="size" /><button onClick={this.newGame}>New game</button><br/>
-                <input placeholder="Game ID" ref="gameId" /><button onClick={this.joinGame}>Join game</button>
                 <div id="game">
                     <BoardElement game={this.props.game.game} actions={this.props.actions} />
-                    <Information game={this.props.game.game} actions={this.props.actions} />
+                    <div id="game-right">
+                        <Information game={this.props.game.game} actions={this.props.actions} />
+                        <div id="game-inputs">
+                            <input placeholder="Board size" ref="size" /><button onClick={this.newGame}>New game</button><br/>
+                            <input placeholder="Game ID" ref="gameId" /><button onClick={this.joinGame}>Join game</button>
+                        </div>
+                    </div>
                 </div>
             </section>
     );

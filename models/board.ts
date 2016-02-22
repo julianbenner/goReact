@@ -96,4 +96,22 @@ export class Board {
         this.squares[move.y][move.x] = color ? Piece.White : Piece.Black;
         return true;
     }
+
+    public getClone(): Piece[][] {
+        const clone = [];
+        for (let i = 0; i < this.size; i++) {
+            clone[i] = [];
+            for (let j = 0; j < this.size; j++) {
+                clone[i][j] = this.squares[i][j];
+            }
+        }
+        return clone;
+    }
+
+    public equals(squares: Piece[][]): boolean {
+        if (squares === null) {
+            return false;
+        }
+        return JSON.stringify(squares) === JSON.stringify(this.squares);
+    }
 }

@@ -22,25 +22,6 @@ class Game {
         this.stats = new Stats();
         this.lastMove = null;
     }
-
-    move(move: PiecePosition): boolean {
-        if (this.board.move(move, this.turn)) {
-            const captured1 = this.board.takeCapturedStones(this.turn ? Piece.Black : Piece.White);
-            this.stats.white += captured1.white;
-            this.stats.black += captured1.black;
-            const captured2 = this.board.takeCapturedStones(this.turn ? Piece.White : Piece.Black);
-            this.stats.white += captured2.white;
-            this.stats.black += captured2.black;
-            this.turn = !this.turn;
-            this.lastMove = move;
-            return true;
-        }
-        return false;
-    }
-
-    pass() {
-        this.turn = !this.turn;
-    }
 }
 
 export class ClientGame extends Game {
@@ -51,12 +32,17 @@ export class ServerGame extends Game {
     clients: WebSocket[];
     clientWhite: WebSocket;
     clientBlack: WebSocket;
+    boardLastHalfMove: Piece[][];
+    boardLastMove: Piece[][];
+    boardLastMoveTemp: Piece[][];
 
     constructor(id: number, size: number) {
         super(id, size);
         this.clients = [];
         this.clientWhite = null;
         this.clientBlack = null;
+        this.boardLastHalfMove = null;
+        this.boardLastMove = null;
     }
 
     isTheirMove(ws: WebSocket): boolean {
@@ -77,5 +63,49 @@ export class ServerGame extends Game {
             lastMove: this.lastMove,
             color: this.clientWhite === ws ? Piece.White : this.clientBlack === ws ? Piece.Black : Piece.Empty
         });
+    }
+
+    private addScores(stats: Stats, remove: boolean = false): void {
+        const sign = remove ? -1 : 1;
+        this.stats.white += stats.white * sign;
+        this.stats.black += stats.black * sign;
+    }
+
+    /**
+     * Performs the move, takes captured stones, checks if KO situation and returns true if valid move
+     * @param move
+     * @returns {boolean}
+     */
+    move(move: PiecePosition): boolean {
+        this.boardLastMoveTemp = this.boardLastMove;
+        this.boardLastMove = this.boardLastHalfMove;
+        this.boardLastHalfMove = this.board.getClone();
+        
+        if (this.board.move(move, this.turn)) {
+            const captured1 = this.board.takeCapturedStones(this.turn ? Piece.Black : Piece.White);
+            this.addScores(captured1);
+            const captured2 = this.board.takeCapturedStones(this.turn ? Piece.White : Piece.Black);
+            this.addScores(captured2);
+
+            // prevent KO situation
+            if (this.board.equals(this.boardLastMove)) {
+                // undo adding captured score
+                this.addScores(captured1, true);
+                this.addScores(captured2, true);
+                // restore last boards
+                this.boardLastHalfMove = this.boardLastMove;
+                this.boardLastMove = this.boardLastMoveTemp;
+                return false;
+            }
+            
+            this.turn = !this.turn;
+            this.lastMove = move;
+            return true;
+        }
+        return false;
+    }
+
+    pass() {
+        this.turn = !this.turn;
     }
 }
