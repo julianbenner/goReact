@@ -93,6 +93,7 @@ export class ServerGame extends Game {
                 this.addScores(captured1, true);
                 this.addScores(captured2, true);
                 // restore last boards
+                this.board.squares = this.boardLastHalfMove;
                 this.boardLastHalfMove = this.boardLastMove;
                 this.boardLastMove = this.boardLastMoveTemp;
                 return false;
