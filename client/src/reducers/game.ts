@@ -21,17 +21,19 @@ export default handleActions<GameState>({
         return state;
     },
     [RECEIVE_GAME]: (state: GameState, action: Action): GameState => {
-        if (state.game !== null)
-        if (state.game.turn && state.game.color === Piece.White || !state.game.turn && state.game.color === Piece.Black) {
-            if('Notification' in window){
-                let _Notification = window['Notification'];
-                if (_Notification.permission === 'granted') {
-                    const options = {
-                        body: 'A move has been made',
-                        icon: './white.png'
-                    };
-                    const n = new _Notification('Go', options);
-                    setTimeout(n.close.bind(n), 5000);
+        const newGame = <ClientGame>action.payload.game;
+        if (state.game !== null) {
+            if (state.game.turn && newGame.color === Piece.White || !state.game.turn && newGame.color === Piece.Black) {
+                if ('Notification' in window) {
+                    let _Notification = window['Notification'];
+                    if (_Notification.permission === 'granted') {
+                        const options = {
+                            body: 'It\'s your turn!',
+                            icon: './white.png'
+                        };
+                        const n = new _Notification('Go', options);
+                        setTimeout(n.close.bind(n), 5000);
+                    }
                 }
             }
         }
