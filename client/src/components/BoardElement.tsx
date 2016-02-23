@@ -42,14 +42,25 @@ class BoardElement extends React.Component<BoardElementProps, any> {
                 'field-white': piece === Piece.White,
                 'field-lastmove': this.isLastMove(x, y)
             });
+            let background = '';
+            if (piece === Piece.Black) background += 'url(circle-black.svg),';
+            if (piece === Piece.White) background += 'url(circle-white.svg),';
+            if (isEdge) {
+                background += 'url(empty-edge.svg)';
+            } else if (isCorner) {
+                background += 'url(empty-corner.svg)';
+            } else {
+                background += 'url(empty.svg)';
+            }
             let rotationDeg = 0;
             if (x === srcX.length - 1) rotationDeg = 90;
             if (y === srcY.length - 1) rotationDeg = 180;
             if (y > 0 && x === 0) rotationDeg = 270;
-            const rotation =  {
+            const style =  {
+                'background-image': background,
                 'transform': 'rotate(' + rotationDeg + 'deg)'
             };
-            return <a className={cn} style={rotation} onClick={this.handleMove.bind(this, x, y)} />
+            return <a className={cn} style={style} onClick={this.handleMove.bind(this, x, y)} />
         });
         return <div className="row">{rowElements}</div>;
     }
