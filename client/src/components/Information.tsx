@@ -29,8 +29,15 @@ class Information extends React.Component<InformationProps, any> {
             {this.props.game.turn ? '○ White' : '● Black'}'s move.<br />
             <button onClick={this.passMove}>Pass</button><br /><br />
             <span id="stats-title">Stats</span><br/>
+            <span id="stats-captured">Captured</span><br/>
             <span>Black: {this.props.game.stats.black}</span><br/>
-            <span>White: {this.props.game.stats.white}</span><br/>
+            <span>White: {this.props.game.stats.white}</span><br/><br/>
+            <span id="stats-territory">Territory</span><br/>
+            <span>Black: {this.props.game.territory.black}</span><br/>
+            <span>White: {this.props.game.territory.white}</span><br/><br/>
+            <span id="stats-territory">Total</span><br/>
+            <span>Black: {this.props.game.territory.black + this.props.game.stats.black}</span><br/>
+            <span>White: {this.props.game.territory.white + this.props.game.stats.white + 6.5}</span>
         </div>);
     }
 

@@ -13,13 +13,15 @@ class Game {
     turn: boolean;
     board: Board;
     stats: Stats;
+    territory: Stats;
     lastMove: PiecePosition;
 
     constructor(id: number, size: number) {
         this.id = id;
-        this.turn = true;
+        this.turn = false;
         this.board = new Board(size);
         this.stats = new Stats();
+        this.territory = new Stats();
         this.lastMove = null;
     }
 }
@@ -55,11 +57,12 @@ export class ServerGame extends Game {
     }
 
     stringify(ws: WebSocket): string {
-        return JSON.stringify({
+        return JSON.stringify(<ClientGame>{
             id: this.id,
             turn: this.turn,
             board: this.board,
             stats: this.stats,
+            territory: this.territory,
             lastMove: this.lastMove,
             color: this.clientWhite === ws ? Piece.White : this.clientBlack === ws ? Piece.Black : Piece.Empty
         });
@@ -101,6 +104,7 @@ export class ServerGame extends Game {
             
             this.turn = !this.turn;
             this.lastMove = move;
+            this.territory = this.board.getTerritory();
             return true;
         }
         return false;

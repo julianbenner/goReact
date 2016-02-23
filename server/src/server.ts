@@ -54,7 +54,7 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 const newGame = new ServerGame(gameId++, newGameMessage.size);
                 state.push(newGame);
                 newGame.clients.push(ws);
-                newGame.clientWhite = ws;
+                newGame.clientBlack = ws;
                 broadcast(newGame, ws);
                 break;
             case MessageType.Join:
@@ -62,10 +62,10 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 const joinGame = getGameOfMessage(joinGameMessage);
                 if (joinGame.clients.indexOf(ws) === -1) {
                     joinGame.clients.push(ws);
-                    if (joinGame.clientWhite === null) {
-                        joinGame.clientWhite = ws;
-                    } else if (joinGame.clientBlack === null) {
+                    if (joinGame.clientBlack === null) {
                         joinGame.clientBlack = ws;
+                    } else if (joinGame.clientWhite === null) {
+                        joinGame.clientWhite = ws;
                     }
                 }
                 broadcast(joinGame, ws);

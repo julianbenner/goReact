@@ -2,6 +2,8 @@ import {Piece} from "./piece";
 import {PiecePosition} from "./piecePosition";
 import {Stats} from "./stats";
 
+interface TerritoryEvaluation { alreadyVisited: string[]; territoryOf: Piece[]; territorySize: number; }
+
 export class Board {
     squares: Piece[][];
     size: number;
@@ -15,6 +17,70 @@ export class Board {
                 this.squares[i][j] = Piece.Empty;
             }
         }
+    }
+
+    public getTerritory(): Stats {
+        const territory = new Stats();
+        const alreadyVisited: string[] = [];
+
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                const isAlreadyVisited = alreadyVisited.indexOf(i + '.' + j) !== -1;
+                if (!isAlreadyVisited) {
+                    if (this.squares[i][j] === Piece.Empty) {
+                        alreadyVisited.push(i + '.' + j);
+                        const territoryEvaluation = this.isPartOfTerritory({x: i, y: j}, alreadyVisited);
+                        territoryEvaluation.alreadyVisited.forEach(a => alreadyVisited.push(a));
+                        const territoryColor = this.inferTerritory(territoryEvaluation.territoryOf);
+                        if (territoryColor === Piece.White) territory.white += territoryEvaluation.territorySize;
+                        if (territoryColor === Piece.Black) territory.black += territoryEvaluation.territorySize;
+                    }
+                }
+            }
+        }
+
+        return territory;
+    }
+
+    private inferTerritory(neighborColors: Piece[]): Piece {
+        if (neighborColors.indexOf(Piece.White) !== -1 && neighborColors.indexOf(Piece.Black) === -1) {
+            return Piece.White;
+        } else if (neighborColors.indexOf(Piece.White) === -1 && neighborColors.indexOf(Piece.Black) !== -1) {
+            return Piece.Black;
+        }
+        return null;
+    }
+
+    private isPartOfTerritory(piece: PiecePosition, alreadyVisitedStones: string[]): TerritoryEvaluation {
+        const neighbors: PiecePosition[] = [{x:piece.x-1, y:piece.y},{x:piece.x+1, y:piece.y},{x:piece.x, y:piece.y-1},{x:piece.x, y:piece.y+1}];
+        const neighborColors: Piece[] = [];
+        let territorySize = 1;
+        for (let i = 0; i < neighbors.length; i++) {
+            const neighbor = neighbors[i];
+            const isAlreadyVisited = alreadyVisitedStones.indexOf(neighbor.x + '.' + neighbor.y) !== -1;
+            if (!isAlreadyVisited) {
+                if (this.isInSizeRange(neighbor)) {
+                    const content = this.getContent(neighbor);
+                    if (content !== Piece.Empty) {
+                        neighborColors.push(content);
+                    } else {
+                        alreadyVisitedStones.push(neighbor.x + '.' + neighbor.y);
+                        const neighborTerritory = this.isPartOfTerritory(neighbor, alreadyVisitedStones);
+                        neighborTerritory.alreadyVisited.forEach(a => {
+                            const isAlreadyListed = alreadyVisitedStones.indexOf(a) !== -1;
+                            if (!isAlreadyListed) alreadyVisitedStones.push(a);
+                        });
+                        neighborTerritory.territoryOf.forEach(a => neighborColors.push(a));
+                        territorySize += neighborTerritory.territorySize;
+                    }
+                }
+            }
+        }
+        return {
+            alreadyVisited: alreadyVisitedStones,
+            territoryOf: neighborColors,
+            territorySize: territorySize
+        };
     }
 
     private isInSizeRange(move: PiecePosition): boolean {

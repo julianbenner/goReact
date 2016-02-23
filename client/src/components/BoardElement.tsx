@@ -29,22 +29,36 @@ class BoardElement extends React.Component<BoardElementProps, any> {
         }
     }
 
-    renderRow(row: Piece[], y: number) {
-        const rowElements = row.map((piece: Piece, x: number) => {
+    renderRow(row: Piece[], y: number, srcY: Piece[][]) {
+        const rowElements = row.map((piece: Piece, x: number, srcX: Piece[]) => {
+            const isCorner = (y === 0 || y === srcY.length - 1) && (x === 0 || x === srcX.length - 1);
+            const isEdge = !isCorner && (y === 0 || y === srcY.length - 1 || x === 0 || x === srcX.length - 1);
             const cn = classnames({
                 'field': true,
+                'field-standard': !isEdge && !isCorner,
+                'field-edge': isEdge,
+                'field-corner': isCorner,
                 'field-black': piece === Piece.Black,
                 'field-white': piece === Piece.White,
                 'field-lastmove': this.isLastMove(x, y)
             });
-            return <a className={cn} onClick={this.handleMove.bind(this, x, y)} />
+            let rotationDeg = 0;
+            if (x === srcX.length - 1) rotationDeg = 90;
+            if (y === srcY.length - 1) rotationDeg = 180;
+            if (y > 0 && x === 0) rotationDeg = 270;
+            const rotation =  {
+                'transform': 'rotate(' + rotationDeg + 'deg)'
+            };
+            return <a className={cn} style={rotation} onClick={this.handleMove.bind(this, x, y)} />
         });
         return <div className="row">{rowElements}</div>;
     }
 
     render() {
         if (this.props.game === null) return <div id="board" />;
-        return (<div id="board">{this.props.game.board.squares.map((row, y) => this.renderRow(row, y))}</div>);
+        return (<div id="board">
+            {this.props.game.board.squares.map((row, y, src) => this.renderRow(row, y, src))}
+        </div>);
     }
 }
 
