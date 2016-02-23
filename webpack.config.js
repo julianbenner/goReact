@@ -1,3 +1,4 @@
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 var path = require('path');
 
@@ -18,7 +19,13 @@ module.exports = {
         configFileName: './client/tsconfig.json'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CopyWebpackPlugin([
+            {
+                'from': './client/assets',
+                'to': '.'
+            }
+        ])
     ],
     entry: [
         './client/src/main'

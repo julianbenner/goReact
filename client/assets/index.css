@@ -1,0 +1,93 @@
+body {
+    font-family: "Segoe UI", sans-serif;
+}
+
+.field {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-size: 100% auto;
+}
+
+.field-standard {
+    background-image: url(empty.png);
+}
+
+.field-edge {
+    background-image: url(empty-edge.png);
+}
+
+.field-corner {
+    background-image: url(empty-corner.png);
+}
+
+.field-black {
+    background-image: url(black.png);
+    background-size: 100% auto;
+}
+
+.field-white {
+    background-image: url(white.png);
+    background-size: 100% auto;
+}
+
+.field-lastmove {
+    border: 2px red solid;
+    box-sizing: border-box;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+    height: 48px;
+}
+
+#game {
+    border-radius: 2px;
+    border: 1px solid #eee;
+}
+
+#board {
+    display: inline-block;
+}
+
+#information {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #eee;
+}
+
+#game-right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#game-inputs {
+    margin-top: 25px;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #eee;
+}
+
+#stats-title {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+button {
+    background-color: #f7f7f7;
+    border: 1px solid #f1f1f1;
+    padding: 8px;
+    border-radius: 2px;
+}
+
+button:hover {
+    background-color: #f1f1f1;
+}
+
+input {
+    padding: 8px;
+    border-radius: 2px;
+    border: 1px solid #f1f1f1;
+    margin-right: 4px;
+}
