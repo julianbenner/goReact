@@ -1,8 +1,9 @@
-import {Board} from "./board";
+import {ServerBoard, ClientBoard, Board} from "./board";
 import WebSocket = require('ws');
 import {Stats} from "./stats";
 import {Piece} from "./piece";
 import {PiecePosition} from "./piecePosition";
+import {Square} from "./square";
 
 export interface GameState {
     game?: ClientGame;
@@ -19,7 +20,7 @@ class Game {
     constructor(id: number, size: number) {
         this.id = id;
         this.turn = false;
-        this.board = new Board(size);
+        this.board = new ServerBoard(size);
         this.stats = new Stats();
         this.territory = new Stats();
         this.lastMove = null;
@@ -27,16 +28,18 @@ class Game {
 }
 
 export class ClientGame extends Game {
+    board: ClientBoard;
     color: Piece;
 }
 
 export class ServerGame extends Game {
+    board: ServerBoard;
     clients: WebSocket[];
     clientWhite: WebSocket;
     clientBlack: WebSocket;
-    boardLastHalfMove: Piece[][];
-    boardLastMove: Piece[][];
-    boardLastMoveTemp: Piece[][];
+    boardLastHalfMove: Square[][];
+    boardLastMove: Square[][];
+    boardLastMoveTemp: Square[][];
 
     constructor(id: number, size: number) {
         super(id, size);
@@ -60,7 +63,7 @@ export class ServerGame extends Game {
         return JSON.stringify(<ClientGame>{
             id: this.id,
             turn: this.turn,
-            board: this.board,
+            board: this.board.getClientBoard(),
             stats: this.stats,
             territory: this.territory,
             lastMove: this.lastMove,

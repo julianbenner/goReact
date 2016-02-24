@@ -16,6 +16,7 @@
     "../models/piece",
     "../models/piecePosition",
     "../models/stats",
+    "../models/square",
     "./src/server",
     "../typings/main.d.ts"
   ]

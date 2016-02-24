@@ -16,7 +16,7 @@ let gameId = 0;
 
 server.on('connection', ws => {
     ws.on('message', message => {
-        handleMessage(message, ws);
+        handleMessage(<string>message, ws);
     });
 
     ws.on('close', () => {
@@ -88,7 +88,7 @@ function handleMessage(messageString: string, ws: WebSocket) {
                 break;
         }
     } catch (e) {
-        console.error(e.message);
+        console.error(e.stack);
     }
 }
 

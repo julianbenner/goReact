@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 
-import {Board} from "../../../models/board";
 import {Piece} from "../../../models/piece";
 import {ClientGame} from "../../../models/game";
 
@@ -57,7 +56,7 @@ class BoardElement extends React.Component<BoardElementProps, any> {
             if (y === srcY.length - 1) rotationDeg = 180;
             if (y > 0 && x === 0) rotationDeg = 270;
             const style =  {
-                'background-image': background,
+                'backgroundImage': background,
                 'transform': 'rotate(' + rotationDeg + 'deg)'
             };
             return <a className={cn} style={style} onClick={this.handleMove.bind(this, x, y)} />
