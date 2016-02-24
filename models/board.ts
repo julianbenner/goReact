@@ -142,11 +142,9 @@ export class ServerBoard extends Board {
             const neighbor = neighbors[i];
             if (this.isInSizeRange(neighbor)) {
                 const neighborPiece = this.getContent(neighbor);
-                if (neighborPiece === Piece.Empty) {
-                    return [];
-                } else if (this.isEnemy(neighbor, color)) {
+                if (this.isEnemy(neighbor, color)) {
                     neighborsUnfree[i] = true;
-                } else {
+                } else if (neighborPiece !== Piece.Empty) {
                     this.squares[piece.x][piece.y].visited = true;
                     const neighborVisited = this.squares[neighbor.x][neighbor.y].visited;
                     neighborsUnfree[i] = true;
