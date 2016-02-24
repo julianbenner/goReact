@@ -127,27 +127,43 @@ export class ServerBoard extends Board {
         return this.getContent(piece) === Piece.White && color === Piece.Black || this.getContent(piece) === Piece.Black && color === Piece.White;
     }
 
-    private isCaptured(piece: PiecePosition, color: Piece): boolean {
+    /**
+     * Determines whether the stone at a position is captured. If it is, an array containing the positions
+     * of all captured stones in this chain is returned. Otherwise, an empty array is returned.
+     * @param piece
+     * @param color
+     * @returns {any}
+     */
+    private isCaptured(piece: PiecePosition, color: Piece): PiecePosition[] {
         const neighbors: PiecePosition[] = [{x:piece.x-1, y:piece.y},{x:piece.x+1, y:piece.y},{x:piece.x, y:piece.y-1},{x:piece.x, y:piece.y+1}];
-        const neighborsCaptured: boolean[] = [false, false, false, false];
+        const neighborsUnfree: boolean[] = [false, false, false, false];
+        const foundCaptured: PiecePosition[] = [piece];
         for (let i = 0; i < neighbors.length; i++) {
             const neighbor = neighbors[i];
             if (this.isInSizeRange(neighbor)) {
                 const neighborPiece = this.getContent(neighbor);
                 if (neighborPiece === Piece.Empty) {
-                    return false;
+                    return [];
                 } else if (this.isEnemy(neighbor, color)) {
-                    neighborsCaptured[i] = true;
+                    neighborsUnfree[i] = true;
                 } else {
                     this.squares[piece.x][piece.y].visited = true;
                     const neighborVisited = this.squares[neighbor.x][neighbor.y].visited;
-                    neighborsCaptured[i] = neighborVisited ? true : this.isCaptured(neighbor, color);
+                    neighborsUnfree[i] = true;
+                    if (!neighborVisited) {
+                        const captured = this.isCaptured(neighbor, color);
+                        if (captured.length === 0) {
+                            neighborsUnfree[i] = false;
+                        } else {
+                            captured.forEach(capturedPiece => foundCaptured.push(capturedPiece));
+                        }
+                    }
                 }
             } else {
-                neighborsCaptured[i] = true;
+                neighborsUnfree[i] = true;
             }
         }
-        return neighborsCaptured.filter(neighbor => neighbor === true).length === 4;
+        return (neighborsUnfree.filter(n => n === true).length === 4) ? foundCaptured : [];
     }
 
     /**
@@ -160,12 +176,12 @@ export class ServerBoard extends Board {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
                 const position = {x: i, y: j};
-                const content = this.getContent(position);
-                if (content === color) {
-                    if (this.isCaptured(position, content)) {
-                        capturedStones.push(position);
+                if (!this.squares[i][j].visited) {
+                    const content = this.getContent(position);
+                    if (content === color) {
+                        const capturedStonesPart = this.isCaptured(position, content);
+                        capturedStonesPart.forEach(stone => capturedStones.push(stone));
                     }
-                    this.resetVisited();
                 }
             }
         }

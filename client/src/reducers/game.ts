@@ -27,7 +27,7 @@ export default handleActions<GameState>({
                 if ('Notification' in window) {
                     let _Notification = window['Notification'];
                     if (_Notification.permission === 'granted') {
-                        const color = newGame.turn ? './white.png' : './black.png';
+                        const color = newGame.turn ? './circle-white.svg' : './circle-black.png';
                         const options = {
                             body: 'It\'s your turn!',
                             icon: color
