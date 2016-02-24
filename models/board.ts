@@ -165,6 +165,7 @@ export class ServerBoard extends Board {
                     if (this.isCaptured(position, content)) {
                         capturedStones.push(position);
                     }
+                    this.resetVisited();
                 }
             }
         }
