@@ -18,9 +18,9 @@ import {
 
 import App from './containers/App';
 import { rootReducer } from './reducers/rootReducer';
-import {NEW_GAME, MOVE, JOIN_GAME, PASS} from "./constants/ActionTypes";
+import {NEW_GAME, MOVE, JOIN_GAME, PASS, RESIGN} from "./constants/ActionTypes";
 import WSInstance from './util/WSInstance';
-import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage, PassMessage} from '../../models/message';
+import {MessageType, MoveMessage, NewGameMessage, JoinGameMessage, PassMessage, ResignMessage} from '../../models/message';
 import {receiveGame} from './actions/game';
 
 const initialState = {};
@@ -76,6 +76,11 @@ const sock = {
                     type: MessageType.Pass,
                     gameId: game.game.id
                 } as PassMessage);
+            case RESIGN:
+                return sock.ws.postMessage({
+                    type: MessageType.Resign,
+                    gameId: game.game.id
+                } as ResignMessage);
             default:
                 return;
         }

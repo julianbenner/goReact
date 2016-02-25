@@ -4,6 +4,7 @@ import {Stats} from "./stats";
 import {Piece} from "./piece";
 import {PiecePosition} from "./piecePosition";
 import {Square} from "./square";
+import {EndType} from "./endType";
 
 export interface GameState {
     game?: ClientGame;
@@ -16,6 +17,7 @@ class Game {
     stats: Stats;
     territory: Stats;
     lastMove: PiecePosition;
+    endType: EndType;
 
     constructor(id: number, size: number) {
         this.id = id;
@@ -24,6 +26,7 @@ class Game {
         this.stats = new Stats();
         this.territory = new Stats();
         this.lastMove = null;
+        this.endType = EndType.None;
     }
 }
 
@@ -40,6 +43,7 @@ export class ServerGame extends Game {
     boardLastHalfMove: Square[][];
     boardLastMove: Square[][];
     boardLastMoveTemp: Square[][];
+    subsequentPassCount: number;
 
     constructor(id: number, size: number) {
         super(id, size);
@@ -48,6 +52,7 @@ export class ServerGame extends Game {
         this.clientBlack = null;
         this.boardLastHalfMove = null;
         this.boardLastMove = null;
+        this.subsequentPassCount = 0;
     }
 
     isTheirMove(ws: WebSocket): boolean {
@@ -67,7 +72,8 @@ export class ServerGame extends Game {
             stats: this.stats,
             territory: this.territory,
             lastMove: this.lastMove,
-            color: this.clientWhite === ws ? Piece.White : this.clientBlack === ws ? Piece.Black : Piece.Empty
+            color: this.clientWhite === ws ? Piece.White : this.clientBlack === ws ? Piece.Black : Piece.Empty,
+            endType: this.endType
         });
     }
 
@@ -76,9 +82,13 @@ export class ServerGame extends Game {
         this.stats.white += stats.white * sign;
         this.stats.black += stats.black * sign;
     }
+    
+    public resign(): void {
+        this.endType = this.turn ? EndType.WhiteResigns : EndType.BlackResigns;
+    }
 
     /**
-     * Performs the move, takes captured stones, checks if KO situation and returns true if valid move
+     * Performs the move, takes captured stones, checks if KO/suicide situation and returns true if valid move
      * @param move
      * @returns {boolean}
      */
@@ -94,7 +104,7 @@ export class ServerGame extends Game {
             this.addScores(captured2);
 
             // prevent KO situation
-            if (this.board.equals(this.boardLastMove)) {
+            if (this.board.equals(this.boardLastMove) || this.board.equals(this.boardLastHalfMove)) {
                 // undo adding captured score
                 this.addScores(captured1, true);
                 this.addScores(captured2, true);
@@ -105,6 +115,7 @@ export class ServerGame extends Game {
                 return false;
             }
             
+            this.subsequentPassCount = 0;
             this.turn = !this.turn;
             this.lastMove = move;
             this.territory = this.board.getTerritory();
@@ -114,6 +125,11 @@ export class ServerGame extends Game {
     }
 
     pass() {
-        this.turn = !this.turn;
+        this.subsequentPassCount++;
+        if (this.subsequentPassCount === 2) {
+            this.endType = EndType.DoublePass;
+        } else {
+            this.turn = !this.turn;
+        }
     }
 }

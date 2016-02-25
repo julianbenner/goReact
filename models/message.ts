@@ -3,7 +3,8 @@ export enum MessageType {
     NewGame = 1,
     Move = 2,
     Join = 3,
-    Pass = 4
+    Pass = 4,
+    Resign = 5
 }
 
 interface MessageInterface {
@@ -28,7 +29,6 @@ export class NewGameMessage extends Message {
 
 export class PlayerMessage extends Message implements GameMessageInterface {
     gameId: number;
-    color: boolean;
 }
 
 export class PassMessage extends PlayerMessage {
@@ -37,4 +37,8 @@ export class PassMessage extends PlayerMessage {
 
 export class MoveMessage extends PlayerMessage {
     move: PiecePosition;
+}
+
+export class ResignMessage extends PlayerMessage {
+    
 }

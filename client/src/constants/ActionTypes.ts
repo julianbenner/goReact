@@ -3,3 +3,4 @@ export const RECEIVE_GAME = 'RECEIVE_GAME';
 export const JOIN_GAME = 'JOIN_GAME';
 export const MOVE = 'MOVE';
 export const PASS = 'PASS';
+export const RESIGN = 'RESIGN';

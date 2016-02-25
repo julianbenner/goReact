@@ -28,10 +28,16 @@ const passMove = createAction<GameState>(
     () => ({ })
 );
 
+const resign = createAction<GameState>(
+    types.RESIGN,
+    () => ({ })
+);
+
 export {
     newGame,
     joinGame,
     receiveGame,
     move,
-    passMove
+    passMove,
+    resign
 }

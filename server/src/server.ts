@@ -4,7 +4,7 @@ import WebSocket = require('ws');
 import {ServerGame} from "../../models/game";
 import {
     Message, MessageType, MoveMessage, NewGameMessage, JoinGameMessage, PassMessage,
-    GameMessageInterface
+    GameMessageInterface, ResignMessage
 } from "../../models/message";
 
 const port: number = process.env.PORT || 3000;
@@ -86,9 +86,20 @@ function handleMessage(messageString: string, ws: WebSocket) {
                     broadcast(passGame, ws);
                 }
                 break;
+            case MessageType.Resign:
+                handleResignMessage(<ResignMessage>message, ws);
+                break;
         }
     } catch (e) {
         console.error(e.stack);
+    }
+}
+
+function handleResignMessage(message: ResignMessage, ws: WebSocket): void {
+    const game = getGameOfMessage(message);
+    if (game.isTheirMove(ws)) {
+        game.resign();
+        broadcast(game, ws);
     }
 }
 

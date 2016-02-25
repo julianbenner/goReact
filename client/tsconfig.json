@@ -11,6 +11,7 @@
   },
   "files": [
     "../models/board.ts",
+    "../models/endType.ts",
     "../models/game.ts",
     "../models/message.ts",
     "../models/piece.ts",
@@ -20,6 +21,7 @@
     "./src/actions/game.ts",
     "./src/components/BoardElement.tsx",
     "./src/components/MainSection.tsx",
+    "./src/components/Information.tsx",
     "./src/constants/ActionTypes.ts",
     "./src/containers/App.tsx",
     "./src/reducers/game.ts",

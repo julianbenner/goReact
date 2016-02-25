@@ -3,6 +3,7 @@ import * as classnames from 'classnames';
 
 import {Piece} from "../../../models/piece";
 import {ClientGame} from "../../../models/game";
+import {EndType} from "../../../models/endType";
 
 interface BoardElementProps {
     game: ClientGame;
@@ -16,7 +17,9 @@ class BoardElement extends React.Component<BoardElementProps, any> {
     }
 
     handleMove(x, y) {
-        this.props.actions.move({ x, y });
+        if (this.props.game.endType === EndType.None) {
+            this.props.actions.move({ x, y });
+        }
     }
 
     isLastMove(x, y) {

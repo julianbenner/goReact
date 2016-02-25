@@ -11,6 +11,7 @@
   },
   "files": [
     "../models/board",
+    "../models/endType",
     "../models/game",
     "../models/message",
     "../models/piece",
